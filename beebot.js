@@ -22,15 +22,16 @@ for (const file of commandFiles) {
 }
 
 //This shit ready
-beebot.on('ready', () => {
+beebot.on('ready', message => {
     console.log('I am ready!');
-    
+    var channelthis = beebot.channels.get('518472414519230467');
+    channelthis.send("Noé decided to turn my ass off to change whatevers inside me, and now im a whole new bee. Beerazy")
 });
 
 //Waits for the message
 beebot.on('message',message => {
     //Checks every message, is bee?
-    if(message.content.includes("bee") && message.content != "been"){
+    if(message.content.includes("bee") && message.content.length == 3){
         message.react('🐝');
     }
     //If it starts with ! -> command
@@ -48,10 +49,12 @@ beebot.on('message',message => {
         }
         return message.channel.send(reply);
     }
-    
+    if(args.length != command.length){
+        return message.reply("Invalid Arguments");
+    };
     //Runs the command
     try{  
-        command.execute(message, args);  
+        command.execute(message, args,beebot);  
     }catch(error){
         console.error(error);
         message.reply('There was an error');
