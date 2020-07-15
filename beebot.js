@@ -20,7 +20,7 @@ for (const file of commandFiles) {
 var connection = mysql.createConnection({
     debug: ['ComQueryPacket', 'RowDataPacket'],
     host: 'localhost',
-    user: 'root',
+    user: 'admin',
     password: 'Durann31!',
     database: 'birthdays'
 });
@@ -48,7 +48,7 @@ connection.connect(function (err) {
 
 
 beebot.on("guildCreate", guild => {
-    let createBirthdays = `CREATE TABLE IF NOT EXISTS \`${guild.id}\` ( Who varchar(255), Date varchar(255));`;
+    let createBirthdays = `CREATE TABLE IF NOT EXISTS \`${guild.id}\` ( WhoAt varchar(255), Who varchar(255), Date varchar(255));`;
     connection.query(createBirthdays, function (err, results, fields) {
         if (err) console.log(err.message);
 
@@ -101,7 +101,7 @@ beebot.on('message', message => {
             if (err) {
                 //If bot was offline and someone added bot to server
                 if (err.code == 'ER_NO_SUCH_TABLE') {
-                    let createBirthdays = `CREATE TABLE IF NOT EXISTS \`${guild.id}\` ( Who varchar(255), Date varchar(255));`;
+                    let createBirthdays = `CREATE TABLE IF NOT EXISTS \`${message.guild.id}\` ( WhoAt varchar(255), Who varchar(255), Date varchar(255));`;
                     connection.query(createBirthdays, function (err, results, fields) {
                         if (err) console.log(err.code);
                     });

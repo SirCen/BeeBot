@@ -1,30 +1,47 @@
 var moment = require('moment');
+const { Message } = require('discord.js');
 module.exports = {
-	name: 'addbirthday',
+    name: 'addbirthday',
     description: 'Add a birthday to the database!',
-    length: 2,
+    length: 3,
     args: true,
-    usage: '<User> <MMDDYYYY>',
-	execute(message, args, beebot,connection) {
+    usage: '<User> <Name> <MMDDYYYY>',
+    execute(message, args, beebot, connection) {
 
-        if(message.mentions.users)console.log("mentions");
-        let who = args[0];
-        let date = args[1];
-        if(date.length != 8) return message.reply("Invalid Date");
-        let formateddate = moment(args[1], "MMDDYYYY").format("MMM Do YYYY");
-        if(moment(formateddate,"MMM Do YYYY").month() > 12) return message.reply("Invalid Month");
-        if(moment(formateddate,"MMM Do YYYY").year() >= moment().year()+1) return message.reply("Invalid Year");
+        if (!message.mentions.users.first()) return message.channel.send("Invalid @");
+        
+        var date         = args[2];
+        var formateddate = moment(args[2], "MMDDYYYY").format("MMM Do YYYY");
 
-        //Check if person is in database
+        if (date.length != 8)                                                   return message.reply("Invalid Date Length");
+        
+        if (!moment(formateddate, "MMM Do YYYY").isValid())                     return message.reply("Invalid Date");
+        
+        if (moment(formateddate, "MMM Do YYYY").year() >= moment().year() + 1)  return message.reply("Invalid Year");
+        
+        if (moment(formateddate, "MMM Do YYYY").year() < 1900)                  return message.reply("Invalid Year: Below 1900");
+        
 
+        connection.query(`SELECT WhoAt, Who, Date FROM \`${message.guild.id}\``, function (err, result, fields) {
+            if (err) {
+                console.log(err)
+            }
 
-        connection.query(`INSERT INTO \`${message.guild.id}\` (Who, Date) VALUES ('${args[0]}', '${args[1]}')`, function (err, result, fields) {
-                    if (err) message.reply(err + " T Error");
-                    message.channel.send("**"+args[0]+"**" + " event has been scheduled and will notify those who join!");
-        });
+            for (i = 0; i < result.length; i++) {
+                if (result[i].Who == args[0]) {
+                    return message.channel.send("User's Birthday Already Added");
+                }
+            }
+            
+            connection.query(`INSERT INTO \`${message.guild.id}\` (WhoAt, Who, Date) VALUES ('${args[0]}','${args[1]}', '${args[2]}')`, function (err, result, fields) {
+                if (err) message.reply("INSERTION ERROR:" + err);
+                return message.channel.send("**" + args[0] + "**" + "'s birthday has been created and stored!");
+            });
 
             
 
-        
-	},
+        });
+
+
+    },
 };
