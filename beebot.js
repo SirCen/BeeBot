@@ -97,6 +97,7 @@ beebot.on('message', message => {
     };
   
     try {
+        //Connects to the correct table and passes the result/data of the table to the commands
         connection.query(`SELECT * FROM \`${message.guild.id}\``, function (err, result, fields) {
             if (err) {
                 //If bot was offline and someone added bot to server
