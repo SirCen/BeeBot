@@ -35,7 +35,7 @@ module.exports = {
             
             connection.query(`INSERT INTO \`${message.guild.id}\` (WhoAt, Who, Date) VALUES ('${args[0]}','${args[1]}', '${args[2]}')`, function (err, result, fields) {
                 if (err) message.reply("INSERTION ERROR:" + err);
-                return message.channel.send("**" + args[0] + "**" + "'s birthday has been created and stored!");
+                return message.channel.send("**" + args[1] + "**" + "'s birthday has been created and stored!");
             });
 
             
