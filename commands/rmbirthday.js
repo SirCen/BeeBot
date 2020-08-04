@@ -9,7 +9,7 @@ module.exports = {
 
         var i = 0;
         while (i < result.length) {
-            if (result[i].Who == args[0]) {
+            if (result[i].Who.toUpperCase() == args[0].toUpperCase()) {
                 message.channel.send("Deleted " + result[i].Who + "'s birthday from the list.");
                 connection.query(`DELETE FROM \`${message.guild.id}\` WHERE WhoAt = '${result[i].WhoAt}' `, function (err, result, fields) {
                     if (err) message.reply(err);

@@ -1,5 +1,3 @@
-//Create database so you can !add birthday
-const { birthdays } = require('../birthdays.json');
 var ArrayList = require('arraylist');
 const Discord = require('discord.js');
 var moment = require('moment');

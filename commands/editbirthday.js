@@ -1,13 +1,14 @@
 var moment = require('moment');
 
 module.exports = {
-    name: 'addbirthday',
-    description: 'Add a birthday to the database!',
+    name: 'editbirthday',
+    description: 'Edits a birthday in the database!',
     length: 3,
     args: true,
     usage: '<User> <Name> <MMDDYYYY>',
     execute(message, args, result, connection) {
 
+        
         if (!message.mentions.users.first()) return message.channel.send("Invalid @");
 
         var date = args[2];
@@ -21,15 +22,17 @@ module.exports = {
 
         if (moment(formateddate, "MMM Do YYYY").year() < 1900) return message.reply("Invalid Year: Below 1900");
 
+        var found = false;
         for (i = 0; i < result.length; i++) {
-            if (result[i].Who == args[0]) {
-                return message.channel.send("User's Birthday Already Added");
+            if (result[i].WhoAt.toUpperCase() == args[0].toUpperCase()) {
+                found = true;
             }
         }
+        if(found == false) return message.channel.send("Birthday not found!")
 
-        connection.query(`INSERT INTO \`${message.guild.id}\` (WhoAt, Who, Date) VALUES ('${args[0]}','${args[1]}', '${args[2]}')`, function (err, result, fields) {
+        connection.query(`UPDATE \`${message.guild.id}\` SET Who = '${args[1]}', Date = '${args[2]}' WHERE WhoAt = '${args[0]}'`, function (err, result, fields) {
             if (err) message.reply("INSERTION ERROR:" + err);
-            return message.channel.send("**" + args[1] + "**" + "'s birthday has been created and stored!");
+            return message.channel.send("**" + args[1] + "**" + "'s birthday has been edited!");
         });
 
 
