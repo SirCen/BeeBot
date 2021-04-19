@@ -20,9 +20,10 @@ for (const file of commandFiles) {
 var connection = mysql.createConnection({
     debug: ['ComQueryPacket', 'RowDataPacket'],
     host: 'localhost',
-    user: 'admin',
-    password: 'Durann31!',
-    database: 'birthdays'
+    user: 'chris',
+    password: '83Jyb_4485!#',
+    database: 'birthdays',
+    insecureAuth : true
 });
 
 connection.on("error", (error) => {
